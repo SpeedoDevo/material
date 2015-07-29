@@ -39,12 +39,8 @@ function MdConstantFactory($sniffer) {
     MEDIA: {
       'xs': '(max-width: 399px)',
       'gt-xs': '(min-width: 400px)',
-<<<<<<< HEAD
       'lt-sm': '(max-width: 599px)',
       'sm': '(min-width: 400px) and (max-width: 599px)',
-=======
-      'sm': '(max-width: 599px)',
->>>>>>> xs, lt
       'gt-sm': '(min-width: 600px)',
       'lt-md': '(max-width: 959px)',
       'md': '(min-width: 600px) and (max-width: 959px)',
