@@ -29,7 +29,9 @@
   -webkit-flex-direction: row;
 }
 
+[layout-padding] > [flex-xs],
 [layout-padding] > [flex-sm],
+[layout-padding] > [flex-lt-sm],
 [layout-padding] > [flex-lt-md]
 {
   padding: $layout-gutter-width / 4;
@@ -49,7 +51,9 @@
 }
 
 
+[layout-margin] > [flex-xs],
 [layout-margin] > [flex-sm],
+[layout-margin] > [flex-lt-sm],
 [layout-margin] > [flex-lt-md]
 {
   margin: $layout-gutter-width / 4;
@@ -269,6 +273,24 @@
 
 }
 
+@mixin hide-for-name($name: '') {
+  @if $name != '' {
+    $name: '-#{$name}';
+  }
+  [hide#{$name}] {
+    display: none;
+  }
+  [show#{$name}] {
+    box-sizing: border-box !important;
+    display: -webkit-box !important;
+    display: -webkit-flex !important;
+    display: -moz-box !important;
+    display: -moz-flex !important;
+    display: -ms-flexbox !important;
+    display: flex !important;
+  }
+}
+
 // Flex attributes for layout children
 // ------------------------------
 
@@ -276,6 +298,7 @@
 @include layout-align-for-name();
 @include flex-order-for-name();
 @include offset-for-name();
+@include hide-for-name();
 
 /**
  * `hide-gt-sm show-gt-lg` should hide from 600px to 1200px
@@ -283,86 +306,150 @@
  * `hide-gt-md show-gt-sm` should show everywhere (show overrides hide)`
  */
 
-// SMALL SCREEN
-@media (max-width: $layout-breakpoint-sm - 1) {
-  [hide-sm], [hide] {
-    &:not([show-sm]):not([show]) {
-      display: none;
+@mixin for-name($name) {
+  @include flex-order-for-name($name);
+  @include layout-align-for-name($name);
+  @include layout-for-name($name);
+  @include offset-for-name($name);
+  @include flex-properties-for-name($name);
+  @include hide-for-name($name);
+}
+
+@mixin breakpoints {
+  $len: length($layout-breakpoints);
+  @for $i from 1 through $len {
+    $name: nth(nth($layout-breakpoints, $i), 1);
+    $breakpoint: nth(nth($layout-breakpoints, $i), 2);
+    @if $i == 1 {
+      @media (max-width: $breakpoint - 1) {
+        @include for-name($name);
+      }
+      @media (min-width: $breakpoint) {
+        @include for-name(gt-#{$name});
+      }
+    } @else {
+      $prev-name: nth(nth($layout-breakpoints, $i - 1), 1);
+      $prev-breakpoint: nth(nth($layout-breakpoints, $i - 1), 2);
+      @media (max-width: $breakpoint - 1) {
+        @include for-name(lt-#{$name});
+      }
+      @media (min-width: $prev-breakpoint) and (max-width: $breakpoint - 1) {
+        @include for-name($name);
+      }
+      @media (min-width: $breakpoint) {
+        @include for-name(gt-#{$name});
+      }      
     }
   }
-
-  @include flex-order-for-name(sm);
-  @include layout-align-for-name(sm);
-  @include layout-for-name(sm);
-  @include offset-for-name(sm);
-  @include flex-properties-for-name(sm);
 }
 
-// BIGGER THAN SMALL SCREEN
-@media (min-width: $layout-breakpoint-sm) {
-  @include flex-order-for-name(gt-sm);
-  @include layout-align-for-name(gt-sm);
-  @include layout-for-name(gt-sm);
-  @include offset-for-name(gt-sm);
-  @include flex-properties-for-name(gt-sm);
-}
+@include breakpoints;
 
-// MEDIUM SCREEN
-@media (min-width: $layout-breakpoint-sm) and (max-width: $layout-breakpoint-md - 1) {
-  [hide], [hide-gt-sm] {
-    &:not([show-gt-sm]):not([show-md]):not([show]) {
-      display: none;
-    }
-  }
-  [hide-md]:not([show-md]):not([show]) {
-    display: none;
-  }
-
-  @include flex-order-for-name(md);
-  @include layout-align-for-name(md);
-  @include layout-for-name(md);
-  @include offset-for-name(md);
-  @include flex-properties-for-name(md);
-}
-
-// BIGGER THAN MEDIUM SCREEN
-@media (min-width: $layout-breakpoint-md) {
-  @include flex-order-for-name(gt-md);
-  @include layout-align-for-name(gt-md);
-  @include layout-for-name(gt-md);
-  @include offset-for-name(gt-md);
-  @include flex-properties-for-name(gt-md);
-}
-
-// LARGE SCREEN
-@media (min-width: $layout-breakpoint-md) and (max-width: $layout-breakpoint-lg - 1) {
-  [hide], [hide-gt-sm], [hide-gt-md] {
-    &:not([show-gt-sm]):not([show-gt-md]):not([show-lg]):not([show]) {
-      display: none;
-    }
-  }
-  [hide-lg]:not([show-lg]):not([show]) {
-    display: none;
-  }
-
-  @include flex-order-for-name(lg);
-  @include layout-align-for-name(lg);
-  @include layout-for-name(lg);
-  @include offset-for-name(lg);
-  @include flex-properties-for-name(lg);
-}
-
-// BIGGER THAN LARGE SCREEN
-@media (min-width: $layout-breakpoint-lg) {
-  [hide-gt-sm], [hide-gt-md], [hide-gt-lg], [hide] {
-    &:not([show-gt-sm]):not([show-gt-md]):not([show-gt-lg]):not([show]) {
-      display: none;
-    }
-  }
-
-  @include flex-order-for-name(gt-lg);
-  @include layout-align-for-name(gt-lg);
-  @include layout-for-name(gt-lg);
-  @include offset-for-name(gt-lg);
-  @include flex-properties-for-name(gt-lg);
-}
+// 
+// //XTRA SMALL SCREEN
+// @media (max-width: $layout-breakpoint-xs - 1) {
+//   [hide-xs], [hide] {
+//     &:not([show-xs]):not([show]) {
+//       display: none;
+//     }
+//   }
+// 
+//   @include flex-order-for-name(xs);
+//   @include layout-align-for-name(xs);
+//   @include layout-for-name(xs);
+//   @include offset-for-name(xs);
+//   @include flex-properties-for-name(xs);
+// }
+// 
+// // BIGGER THAN SMALL SCREEN
+// @media (min-width: $layout-breakpoint-xs) {
+//   @include flex-order-for-name(gt-xs);
+//   @include layout-align-for-name(gt-xs);
+//   @include layout-for-name(gt-xs);
+//   @include offset-for-name(gt-xs);
+//   @include flex-properties-for-name(gt-xs);
+// }
+// 
+// // SMALL SCREEN
+// @media (min-width: $layout-breakpoint-xs) and (max-width: $layout-breakpoint-sm - 1) {
+//   [hide-sm], [hide] {
+//     &:not([show-sm]):not([show]) {
+//       display: none;
+//     }
+//   }
+// 
+//   @include flex-order-for-name(sm);
+//   @include layout-align-for-name(sm);
+//   @include layout-for-name(sm);
+//   @include offset-for-name(sm);
+//   @include flex-properties-for-name(sm);
+// }
+// 
+// // BIGGER THAN SMALL SCREEN
+// @media (min-width: $layout-breakpoint-sm) {
+//   @include flex-order-for-name(gt-sm);
+//   @include layout-align-for-name(gt-sm);
+//   @include layout-for-name(gt-sm);
+//   @include offset-for-name(gt-sm);
+//   @include flex-properties-for-name(gt-sm);
+// }
+// 
+// // MEDIUM SCREEN
+// @media (min-width: $layout-breakpoint-sm) and (max-width: $layout-breakpoint-md - 1) {
+//   [hide], [hide-gt-sm] {
+//     &:not([show-gt-sm]):not([show-md]):not([show]) {
+//       display: none;
+//     }
+//   }
+//   [hide-md]:not([show-md]):not([show]) {
+//     display: none;
+//   }
+// 
+//   @include flex-order-for-name(md);
+//   @include layout-align-for-name(md);
+//   @include layout-for-name(md);
+//   @include offset-for-name(md);
+//   @include flex-properties-for-name(md);
+// }
+// 
+// // BIGGER THAN MEDIUM SCREEN
+// @media (min-width: $layout-breakpoint-md) {
+//   @include flex-order-for-name(gt-md);
+//   @include layout-align-for-name(gt-md);
+//   @include layout-for-name(gt-md);
+//   @include offset-for-name(gt-md);
+//   @include flex-properties-for-name(gt-md);
+// }
+// 
+// // LARGE SCREEN
+// @media (min-width: $layout-breakpoint-md) and (max-width: $layout-breakpoint-lg - 1) {
+//   [hide], [hide-gt-sm], [hide-gt-md] {
+//     &:not([show-gt-sm]):not([show-gt-md]):not([show-lg]):not([show]) {
+//       display: none;
+//     }
+//   }
+//   [hide-lg]:not([show-lg]):not([show]) {
+//     display: none;
+//   }
+// 
+//   @include flex-order-for-name(lg);
+//   @include layout-align-for-name(lg);
+//   @include layout-for-name(lg);
+//   @include offset-for-name(lg);
+//   @include flex-properties-for-name(lg);
+// }
+// 
+// // BIGGER THAN LARGE SCREEN
+// @media (min-width: $layout-breakpoint-lg) {
+//   [hide-gt-sm], [hide-gt-md], [hide-gt-lg], [hide] {
+//     &:not([show-gt-sm]):not([show-gt-md]):not([show-gt-lg]):not([show]) {
+//       display: none;
+//     }
+//   }
+// 
+//   @include flex-order-for-name(gt-lg);
+//   @include layout-align-for-name(gt-lg);
+//   @include layout-for-name(gt-lg);
+//   @include offset-for-name(gt-lg);
+//   @include flex-properties-for-name(gt-lg);
+// }

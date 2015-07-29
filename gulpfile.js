@@ -1,5 +1,6 @@
 var gulp = require('gulp');
 var fs = require('fs');
+var debug = require('gulp-debug');
 
 //-- include docs gulpfile (should eventually be factored out)
 require('./docs/gulpfile');
