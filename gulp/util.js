@@ -26,6 +26,8 @@ var IS_DEV = constants.IS_DEV;
 var ROOT = constants.ROOT;
 var utils = require('../scripts/gulp-utils.js');
 
+var debug = require('gulp-debug');
+
 exports.buildJs = buildJs;
 exports.autoprefix = autoprefix;
 exports.buildModule = buildModule;
@@ -44,6 +46,7 @@ function buildJs (isRelease) {
   gutil.log("building js files...");
 
   var jsBuildStream = gulp.src( jsFiles )
+      // .pipe(debug({title: 'js:'}))
       .pipe(filterNonCodeFiles())
       .pipe(utils.buildNgMaterialDefinition())
       .pipe(plumber())
