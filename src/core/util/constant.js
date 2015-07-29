@@ -39,22 +39,27 @@ function MdConstantFactory($$rAF, $sniffer) {
     MEDIA: {
       'xs': '(max-width: 399px)',
       'gt-xs': '(min-width: 400px)',
-      'sm': '(max-width: 599px)',
+      'lt-sm': '(max-width: 599px)',
+      'sm': '(min-width: 400px) and (max-width: 599px)',
       'gt-sm': '(min-width: 600px)',
-      'md': '(min-width: 600px) and (max-width: 960px)',
+      'lt-md': '(max-width: 959px)',
+      'md': '(min-width: 600px) and (max-width: 959px)',
       'gt-md': '(min-width: 960px)',
-      'lg': '(min-width: 960px) and (max-width: 1200px)',
-      'gt-lg': '(min-width: 1200px)'
+      'lt-lg': '(max-width: 1199px)',
+      'lg': '(min-width: 960px) and (max-width: 1199px)',
+      'gt-lg': '(min-width: 1200px)',
     },
     MEDIA_PRIORITY: [
       'gt-lg',
       'lg',
+      'lt-lg',
       'gt-md',
       'md',
+      'lt-md',
       'gt-sm',
       'sm',
+      'lt-sm',
       'gt-xs',
-      'xs'
-    ]
+      'xs',    ]
   };
 }
