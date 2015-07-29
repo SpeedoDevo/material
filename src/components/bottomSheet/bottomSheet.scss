@@ -121,7 +121,11 @@ md-bottom-sheet {
         }
       }
       
-      @media screen and (max-width: $layout-breakpoint-sm) {
+      @media screen and (max-width: $layout-breakpoint-xs) {
+        @include grid-items-per-row(2, true);
+      }
+      
+      @media screen and (min-width: $layout-breakpoint-xs) and (max-width: $layout-breakpoint-sm) {
         @include grid-items-per-row(3, true);
       }
 
