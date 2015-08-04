@@ -69,6 +69,8 @@ function InkRippleService($window, $timeout) {
     }
 
     controller.createRipple = createRipple;
+    controller.create = onPressDown;
+    controller.destroy = onPressUp;
 
     if (isActiveExpr) {
       scope.$watch(isActiveExpr, function watchActive(newValue) {
