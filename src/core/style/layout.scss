@@ -278,7 +278,7 @@
     $name: '-#{$name}';
   }
   [hide#{$name}] {
-    display: none;
+    display: none !important;
   }
   [show#{$name}] {
     box-sizing: border-box !important;
