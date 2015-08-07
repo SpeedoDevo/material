@@ -279,6 +279,7 @@
   }
   [hide#{$name}] {
     display: none !important;
+    display: none;
   }
   [show#{$name}] {
     box-sizing: border-box !important;
