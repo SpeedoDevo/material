@@ -149,7 +149,11 @@ function InkRippleService($window, $timeout, $mdUtil) {
       if (ripples.length === 0) {
         getRippleContainer().css({ backgroundColor: '' });
       }
-      $timeout(function () { elem.remove(); }, wait, false);
+      $timeout(function () {
+        elem.remove();
+        angular.element($window).off('resize', elem.listener)
+        angular.element($window).off('orientationchange', elem.listener)
+      }, wait, false);
     }
 
     function updateElement(elem) {
@@ -216,8 +220,24 @@ function InkRippleService($window, $timeout, $mdUtil) {
           updateElement(elem);
         }, (options.outline ? 450 : 225), false);
       });
-
+      
+      angular.element($window).on('resize', updateSize);
+      angular.element($window).on('orientationchange', updateSize);
+      elem.listener = updateSize;
+      
       return elem;
+
+      function updateSize() {
+        $mdUtil.debounce(function () {
+          var size = getRippleSize();
+          var css  = {
+            width: size + 'px',
+            height: size + 'px'
+          };
+          css.marginLeft = css.marginTop = (size * -0.5) + 'px';
+          elem.css(css);
+        }, 100)();
+      }
 
       /**
        * Creates the ripple element with the provided css
